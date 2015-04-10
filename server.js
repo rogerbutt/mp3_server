@@ -112,8 +112,9 @@ var usersIdRoute = router.route('/users/:id');
 
 usersIdRoute.get(function(req, res) {
   User.findById(req.params.id, function(err, user) {
-    if (err) {
-      res.status(checkError(user)).json(constructError("User not found"));
+    if (err || user === null) {
+      res.status(404).json(constructError("User not found"));
+      return;
     }
 
     res.status(200).json(constructResponse(user));
@@ -137,7 +138,7 @@ usersIdRoute.put(function(req, res) {
 
 usersIdRoute.delete(function(req, res) {
   User.findById(req.params.id, function(err, user) {
-    if(err) {
+    if(err || user === null) {
       res.status(404).json(constructError("User not found"));
     }
     else {
@@ -148,7 +149,7 @@ usersIdRoute.delete(function(req, res) {
       }
 
       user.remove();
-      res.status(200).send();
+      res.status(200).json(constructResponse("Removed user."));
     }
   });
 });
