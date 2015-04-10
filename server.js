@@ -72,7 +72,7 @@ usersRoute.get(function(req, res) {
 
   User.find(where, fields, options, function(err, users) {
     if (err) {
-      res.status(checkError(users)).json(constructError("Users not found"));
+      res.status(404).json(constructError("Users not found"));
       return;
     }
     res.status(200).json(constructResponse(users));
@@ -92,7 +92,7 @@ usersRoute.post(function(req, res) {
     if(user.length === 0) {
       var newUser = new User(data);
       newUser.save();
-      res.status(201).json(constructResponse(newUser.toJSON()));
+      res.status(201).json(constructResponse(newUser));
     }
     else {
       if(err) res.status(500).json(constructError("Server error"));
@@ -116,7 +116,7 @@ usersIdRoute.get(function(req, res) {
       res.status(checkError(user)).json(constructError("User not found"));
     }
 
-    res.status(200).json(constructResponse(user.toJSON()));
+    res.status(200).json(constructResponse(user));
   });
 });
 
@@ -129,7 +129,7 @@ usersIdRoute.put(function(req, res) {
       var data = req.body;
       user.update(data, function() {
         user.save();
-        res.status(200).send(constructResponse(user.toJSON()));
+        res.status(200).send(constructResponse(user));
       });
     }
   });
@@ -187,7 +187,7 @@ tasksRoute.post(function(req, res) {
   newTask.save();
 
   if(newTask.assignedUser === '') {
-    res.status(200).json(constructResponse(newTask.toJSON()));
+    res.status(200).json(constructResponse(newTask));
     return;
   }
 
@@ -199,7 +199,7 @@ tasksRoute.post(function(req, res) {
 
     console.log(newTask);
 
-    res.status(200).json(constructResponse(newTask.toJSON()));
+    res.status(200).json(constructResponse(newTask));
 
     if(!newTask.completed) {
       var pTasks = user.pendingTasks;
@@ -223,7 +223,7 @@ tasksIdRoute.get(function(req, res) {
       res.status(404).json(constructError("Task not found"));
     }
     else {
-      res.status(200).json(constructResponse(task.toJSON()));
+      res.status(200).json(constructResponse(task));
     }
   });
 });
